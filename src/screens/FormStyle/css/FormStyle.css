@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.form {
+  width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 675px;
+}
+
+.form .form-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 55px;
+  margin-top: 55px;
+}
+
+.form .form-content .forgot {
+  width: 100;
+  display: flex;
+  justify-content: flex-end;
+}
+/*# sourceMappingURL=FormStyle.css.map */

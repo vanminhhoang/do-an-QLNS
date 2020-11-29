@@ -1,0 +1,19 @@
+.header{
+    display: flex;
+    flex-direction: row;
+    height: 25pt;
+    width: auto;
+    align-items: center;
+}
+
+.headericon{
+    width: 25pt;
+    height: 25pt;
+}
+
+#headertext{
+    font-size: 18pt;
+    color: gray;
+    font-weight: 500;
+    padding-left: 10px;
+}

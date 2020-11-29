@@ -1,0 +1,22 @@
+.seach{
+    display: flex;
+    flex-direction: row;
+}
+
+.seachtext{
+    height: auto;
+    width: 100%;
+    font-size: 13pt;
+    padding-left: 10px;
+    outline: none;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.seachicon{
+    width: auto;
+    height: 15pt;
+    background-color: #33aef5;
+    padding: 10px;
+}

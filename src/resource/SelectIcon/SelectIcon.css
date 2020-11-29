@@ -1,0 +1,29 @@
+.selecticon{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.selecticonselect{
+    height: 25pt;
+    width: 80%;
+    font-size: 13pt;
+    padding-left: 5px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    outline: none;
+}
+
+.selecticonimg{
+    height: 20px;
+    padding: 6px;
+    width: auto;
+    background-color: #33aef5;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.selecticonimg:active{
+    opacity: 0.5;
+}

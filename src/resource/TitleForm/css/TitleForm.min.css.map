@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,MAAM,AAAC,CACH,SAAS,CAAE,IAAI,CACf,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,IAAI,CACjB,cAAc,CAAE,IAAI,CACpB,gBAAgB,CAAE,OAAO,CACzB,WAAW,CAAE,GAAG,CAChB,KAAK,CAAE,KAAK,CAEf",
+    "sources": [
+        "TitleForm.scss"
+    ],
+    "names": [],
+    "file": "TitleForm.min.css"
+}

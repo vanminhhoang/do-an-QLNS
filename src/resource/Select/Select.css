@@ -1,0 +1,12 @@
+.select{
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    outline: none;
+    font-size: 13pt;
+}
+
+option{
+    font-size: 13pt;
+}
