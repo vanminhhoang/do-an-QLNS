@@ -24,7 +24,21 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+
+    <!-- push notification -->
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+      console.log('this one signal')
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "89347aa7-c248-4a3f-b07f-0e2426188e2b",
+        });
+        // OneSignal.showNativePrompt();
+      });
+    </script>
+
+    <title>Quản Lí Nhân Sự</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

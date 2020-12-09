@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import Dashboard from './screens/Dashboard/Dashboard'
-import Rout from './screens/RouteForm/router'
+import Rout from './activity/Route/router'
 
 import { Provider } from 'react-redux'
-import { store } from './redux/Store'
+import { store } from './reactRedux/ReduxSt'
 
 import * as serviceWorker from './serviceWorker'
 
