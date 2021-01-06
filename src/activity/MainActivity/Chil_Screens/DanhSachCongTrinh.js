@@ -380,6 +380,13 @@ function DSCongTrinh(props) {
 
         function delCongTrinh() {
             if (window.fetch) {
+                console.log(
+                    JSON.stringify({
+                        MaCT: objTTCT.MaCT,
+                        SDT: sdt,
+                        Pass: pass,
+                    })
+                )
                 fetch(URL_API + DEL_CONGTRINH + '?token=' + TOKEN, {
                     method: 'DELETE',
                     headers: {
@@ -395,6 +402,7 @@ function DSCongTrinh(props) {
                         return response.json()
                     })
                     .then((result) => {
+                        console.log(result)
                         if (result.success) {
                             setLoadDSCT(true)
                             setShowMess(true)

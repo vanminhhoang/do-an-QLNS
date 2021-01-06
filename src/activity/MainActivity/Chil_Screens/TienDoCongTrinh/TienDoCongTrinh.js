@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import {
-    HashRouter as Router,
-    Switch,
-    Route,
-    useParams,
-    Link,
-    useRouteMatch,
-} from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 import ChiTietTienDoCongTrinh from './Child_Screen/ChiTietTienDoCongTrinh'
 
@@ -20,7 +13,9 @@ import Spinner from 'react-bootstrap/Spinner'
 
 //import icon react material ui
 import SearchIcon from '@material-ui/icons/Search'
-
+import ReactToPrint from 'react-to-print'
+import BaoCaoTienDo from '../../../../component/BaoCaoTienDo/BaoCaoTienDo'
+import Modal from 'react-bootstrap/Modal'
 //Import react material-ui
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -93,6 +88,14 @@ function TienDoCongTrinh(props) {
     const [isNetWork, setIsNetWork] = useState(true)
     const [loading, setloading] = useState(false)
     const [loadDSTD, setLoadDSTD] = useState()
+
+    const componentRef = useRef(null)
+    const [stateModal, setStateModal] = useState({
+        open: false,
+        itemSelected: null,
+    })
+
+    const info_nhanvien = JSON.parse(sessionStorage.getItem('info'))
 
     function checkNetWork() {
         window.addEventListener('online', () => {
@@ -179,16 +182,6 @@ function TienDoCongTrinh(props) {
                                 Xem Chi Tiết
                             </Button>
                         </Link>
-                        <Button
-                            variant="info"
-                            style={{
-                                width: '110px',
-                                fontSize: '14px',
-                                marginLeft: '3px',
-                            }}
-                        >
-                            In
-                        </Button>
                     </TableCell>
                 ) : (
                     <div></div>
@@ -197,10 +190,51 @@ function TienDoCongTrinh(props) {
         )
     }
 
-    useEffect(() => {}, [])
+    function handleClickPrint(item) {
+        setStateModal({ ...stateModal, open: true, itemSelected: item })
+    }
+
+    function ModalShowTienDo() {
+        return (
+            <Modal
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                size="xl"
+                show={stateModal.open}
+                onHide={() => setStateModal({ ...stateModal, open: false })}
+            >
+                <Modal.Body
+                    style={{
+                        overflow: 'hidden',
+                        padding: '0',
+                    }}
+                >
+                    <BaoCaoTienDo
+                        ref={componentRef}
+                        item={stateModal.itemSelected}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <ReactToPrint
+                        trigger={() => <Button>In</Button>}
+                        content={() => componentRef.current}
+                    />
+                    <Button
+                        variant="danger"
+                        onClick={() => {
+                            setStateModal({ ...stateModal, open: false })
+                        }}
+                    >
+                        Hủy
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
 
     return (
         <Container fluid>
+            <ModalShowTienDo />
             <div
                 style={{
                     display: 'flex',
@@ -215,7 +249,26 @@ function TienDoCongTrinh(props) {
                 >
                     Tiến Độ Công Trình
                 </h1>
+                <Button
+                    variant="info"
+                    style={{
+                        width: '150px',
+                        height: '45px',
+                        fontSize: '14px',
+                    }}
+                    onClick={() => {
+                        handleClickPrint({
+                            name: info_nhanvien.HoTen,
+                            phongBan: 'Dự Án',
+                            listCT: dataDSTD,
+                            date: new Date(),
+                        })
+                    }}
+                >
+                    In
+                </Button>
             </div>
+
             <Paper style={{ width: '100%' }}>
                 {loading ? (
                     <div className={classes.iconLoad}>

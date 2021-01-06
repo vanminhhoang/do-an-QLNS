@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 //import component React Bootstrap
 import Container from 'react-bootstrap/Container'
@@ -7,6 +7,8 @@ import Spinner from 'react-bootstrap/Spinner'
 
 //import icon react material ui
 import SearchIcon from '@material-ui/icons/Search'
+
+import Dropdown from 'react-bootstrap/Dropdown'
 
 //Import react material-ui
 import Table from '@material-ui/core/Table'
@@ -72,12 +74,16 @@ const useStyles = makeStyles((theme) => ({
 function BangLuong(props) {
     const TOKEN = sessionStorage.getItem('token')
     const URL_API_GET_BANGLUONG =
-        'https://qlnscloud.herokuapp.com/bangluong2/DanhSachBangLuong2?token='
+        'https://qlnscloud.herokuapp.com/ngaycong2/ToanBoNgayCong'
     const [UITableBangLuong, setUITableBangLuong] = useState()
     const [isNetWork, setIsNetWork] = useState(true)
     const [loading, setloading] = useState()
     const [dataDSBL, setDataDSBL] = useState()
     const [loadDSNV, setLoadDSNV] = useState(false)
+
+    function formatNumber(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
 
     const classes = useStyles()
 
@@ -98,7 +104,7 @@ function BangLuong(props) {
     function getDanhSachBangLuong() {
         setloading(true)
         if (window.fetch) {
-            fetch(URL_API_GET_BANGLUONG + TOKEN)
+            fetch(URL_API_GET_BANGLUONG + '?token=' + TOKEN)
                 .then((response) => {
                     return response.json()
                 })
@@ -124,25 +130,23 @@ function BangLuong(props) {
 
     function RenderUITableNhanVien(data) {
         setUITableBangLuong(
-            data.map((e) => {
-                return ItemBangLuong(e)
+            data.map((e, index) => {
+                return ItemBangLuong(e, index)
             })
         )
     }
 
-    var stt = 0
-    function ItemBangLuong(props) {
-        stt++
+    function ItemBangLuong(props, index) {
         return (
             <TableRow hover>
-                <TableCell>{stt}</TableCell>
+                <TableCell>{index}</TableCell>
                 <TableCell>{props.HoTen}</TableCell>
-                <TableCell>{props.ThangTrongNam}</TableCell>
-                <TableCell>{props.KhauTruThue}</TableCell>
-                <TableCell>{props.TienThuong}</TableCell>
-                <TableCell>{props.TienPhuCap}</TableCell>
-                <TableCell>{props.TienBaoHiem}</TableCell>
-                <TableCell>{props.TienLuongThang}</TableCell>
+                <TableCell>{props.TenCT}</TableCell>
+                <TableCell>{props.SoNgayCong}</TableCell>
+                <TableCell>250,000 VNĐ</TableCell>
+                <TableCell>
+                    {formatNumber(props.SoNgayCong * 300000)} VNĐ
+                </TableCell>
             </TableRow>
         )
     }
@@ -184,14 +188,18 @@ function BangLuong(props) {
                                     onChange={(event) => {
                                         const textSearch = event.target.value.toLowerCase()
                                         const regex = new RegExp(textSearch)
+
                                         setUITableBangLuong(
-                                            dataDSBL.map((e) => {
+                                            dataDSBL.map((e, index) => {
                                                 if (
                                                     regex.test(
                                                         e.HoTen.toLowerCase()
                                                     )
                                                 ) {
-                                                    return ItemBangLuong(e)
+                                                    return ItemBangLuong(
+                                                        e,
+                                                        index
+                                                    )
                                                 }
                                             })
                                         )
@@ -202,7 +210,8 @@ function BangLuong(props) {
                         </div>
                         <TableContainer
                             style={{
-                                maxHeight: '80vh',
+                                minHeight: '70vh',
+                                maxHeight: '70vh',
                                 width: '100%',
                                 backgroundColor: 'white',
                             }}
@@ -212,12 +221,12 @@ function BangLuong(props) {
                                     <TableRow>
                                         <TableCell>STT</TableCell>
                                         <TableCell>Họ Tên</TableCell>
-                                        <TableCell>Tháng Trong Năm</TableCell>
-                                        <TableCell>Khấu Trừ Thuế</TableCell>
-                                        <TableCell>Tiền Thưởng</TableCell>
-                                        <TableCell>Tiền Phụ Cấp</TableCell>
-                                        <TableCell>Tiền Bảo Hiểm</TableCell>
-                                        <TableCell>Tiền Lương Tháng</TableCell>
+                                        <TableCell>
+                                            Công Trình Tham Gia
+                                        </TableCell>
+                                        <TableCell>Ngày Công</TableCell>
+                                        <TableCell>Lương/Ngày</TableCell>
+                                        <TableCell>Tổng Lương</TableCell>
                                     </TableRow>
                                 </TableHead>
 

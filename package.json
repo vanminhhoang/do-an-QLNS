@@ -19,6 +19,7 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-to-print": "^2.12.2",
     "redux": "^4.0.5",
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"

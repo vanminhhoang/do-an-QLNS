@@ -103,7 +103,7 @@ function DSNhanVien(props) {
     const GET_ALL_NHANVIEN =
         'https://qlnscloud.herokuapp.com/account2/allNhanVien'
     const DEL_NHANVIEN =
-        'https://qlnscloud.herokuapp.com/truongphong/XoaNhanVien'
+        'https://qlnscloud.herokuapp.com/truongphong2/XoaNhanVien'
     const TOKEN = sessionStorage.getItem('token')
 
     const [dataDSNV, setDataDSNV] = useState()
@@ -386,6 +386,14 @@ function DSNhanVien(props) {
         const [pass, setPass] = useState()
 
         function delNhanVien() {
+            console.log(
+                JSON.stringify({
+                    MaNV: nhanVien.MaNV,
+                    SDT: sdt,
+                    Pass: pass,
+                })
+            )
+            console.log(TOKEN)
             fetch(DEL_NHANVIEN + '?token=' + TOKEN, {
                 method: 'DELETE',
                 headers: {

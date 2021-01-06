@@ -11,6 +11,7 @@ import ForgotPassword from '../QuenMatKhau/QuenMatKhau'
 import ResetPassword from '../LayLaiMatKhau/LayLaiMatKhau'
 import ChangePassword from '../DoiMatKhau/DoiMatKhau'
 import Dashboard from '../MainActivity/MainActivity'
+import BaoCaoTienDo from '../../component/BaoCaoTienDo/BaoCaoTienDo'
 
 function RouterApp() {
     return (

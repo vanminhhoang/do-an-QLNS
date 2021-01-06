@@ -1,0 +1,30 @@
+.header-baocao {
+    display: flex;
+    justify-content: space-between;
+
+    .name-coquan {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.title-baocao {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.info-baocao {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+.ki-ten {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 25px;
+}

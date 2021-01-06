@@ -97,9 +97,7 @@ const useStyles = makeStyles((theme) => ({
 function PhanCongNhanVien(props) {
     const URL_API = 'https://qlnscloud.herokuapp.com/ngaycong2/'
     const GET_DSNC = 'ToanBoNgayCong'
-    const UPDATE_NC = 'CapNhatNgayCong'
     const ADD_NGAYCONG = 'ThemNgayCongCuaNhanVien'
-    const DEL_NGAYCONG = 'XoaNgayCongNhanVien'
     const TOKEN = sessionStorage.getItem('token')
 
     const [thongTinCT, setThongTinCT] = useState()
@@ -110,6 +108,7 @@ function PhanCongNhanVien(props) {
 
     const [UITableNgayCong, setUITableNhanVien] = useState()
     const [loadDSNC, setLoadDSNC] = useState(false)
+    const [danhSachCT, setDanhSachCT] = useState([])
     const [loading, setLoading] = useState(false)
 
     const [showMess, setShowMess] = useState(false)
@@ -150,6 +149,25 @@ function PhanCongNhanVien(props) {
         }
     }
 
+    function getDanhSachCongTrinh() {
+        fetch(
+            'https://qlnscloud.herokuapp.com/congtrinh2/ToanBoCongTrinh' +
+                '?token=' +
+                TOKEN
+        )
+            .then((response) => {
+                return response.json()
+            })
+            .then((result) => {
+                if (result.success) {
+                    setDanhSachCT(result.data)
+                }
+            })
+            .catch((error) => {
+                console.log('Lỗi', error)
+            })
+    }
+
     function checkNetWork() {
         window.addEventListener('online', () => {
             setIsNetWork(window.navigator.onLine)
@@ -167,6 +185,7 @@ function PhanCongNhanVien(props) {
     useEffect(() => {
         checkNetWork()
         getDanhSachNgayCong()
+        getDanhSachCongTrinh()
     }, [loadDSNC])
 
     function RenderUITableNhanVien(data) {
@@ -187,17 +206,7 @@ function PhanCongNhanVien(props) {
                 <TableCell>{props.TenCT}</TableCell>
                 <TableCell>{props.DiaDiem}</TableCell>
                 <TableCell>{props.DateWorking}</TableCell>
-                {/* <TableCell>
-                    <Rating
-                        // name="simple-controlled"
-                        value={props.DanhGia}
-                        readOnly
-                        // onChange={(event, newValue) => {
-                        //     setValueRating(event.target.value)
-                        //     console.log(valueRating)
-                        // }}
-                    />
-                </TableCell> */}
+                <TableCell>{props.DateDone}</TableCell>
                 {object_nhanVien.TypeNV == 2 ? (
                     <TableCell
                         style={{
@@ -223,236 +232,16 @@ function PhanCongNhanVien(props) {
                 ) : (
                     <div></div>
                 )}
-
-                {/* <Button
-                        variant="danger"
-                        style={{
-                            marginLeft: '5px',
-                            width: '100px',
-                            fontSize: '17px',
-                        }}
-                        onClick={() => {
-                            console.log('xoa ngay cong')
-                            setThongTinCT(props)
-                            setModalShowDialogDelNC(true)
-                        }}
-                    >
-                        Xóa
-                    </Button> */}
             </TableRow>
         )
     }
 
-    function ModalDialogUpdateSLNgayCong() {
-        const objCT = { ...thongTinCT }
-        const [newSLNgayCong, setNewSLNgayCong] = useState()
-
-        function updateSLNgayCong() {
-            if (window.fetch) {
-                fetch(URL_API + UPDATE_NC + '?token=' + TOKEN, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        MaNV: objCT.MaNV,
-                        SLNgayCong: newSLNgayCong,
-                    }),
-                })
-                    .then((response) => {
-                        return response.json()
-                    })
-                    .then((result) => {
-                        if (result.success) {
-                            setLoadDSNC(true)
-                            setShowMess(true)
-                            setTextMess(
-                                'Cập nhật số lượng ngày công thành công!'
-                            )
-                            setSeverityMess('success')
-                            return
-                        } else {
-                            setShowMess(true)
-                            setTextMess(result.mess)
-                            setSeverityMess('error')
-                            return
-                        }
-                    })
-                    .catch((error) => console.log('Lỗi', error))
-            } else {
-                console.log('fetch not found')
-            }
-        }
-
-        return (
-            <Modal
-                show={modalShowDialogUpdateNC}
-                onHide={() => setModalShowDialogUpdateNC(false)}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <h5>Cập nhật số lượng ngày công nhân viên</h5>
-                </Modal.Header>
-                <Modal.Body>
-                    <InputText
-                        placeholder="Mã Công Trình"
-                        setInputContent={setNewSLNgayCong}
-                    />
-                    <InputText
-                        placeholder="Ngày Làm Việc"
-                        setInputContent={setNewSLNgayCong}
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        variant="secondary"
-                        onClick={() => setModalShowDialogUpdateNC(false)}
-                    >
-                        Từ Chối
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                            updateSLNgayCong()
-                            setModalShowDialogUpdateNC(false)
-                        }}
-                    >
-                        Đồng Ý
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
-
-    function ModalDialogDelNgayCong() {
-        const objNC = { ...thongTinCT }
-        const [sdt, setSdt] = useState()
-        const [pass, setPass] = useState()
-
-        function ItemDialog(props) {
-            return (
-                <div className={classes.itemDialog}>
-                    <span>{props.label}</span>
-                    <span style={{ fontWeight: '600', color: 'gray' }}>
-                        {props.data}
-                    </span>
-                </div>
-            )
-        }
-
-        function delNgayCong() {
-            if (window.fetch) {
-                fetch(URL_API + DEL_NGAYCONG + '?token=' + TOKEN, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        MaNV: objNC.MaNV,
-                        SDT: sdt,
-                        Pass: pass,
-                    }),
-                })
-                    .then((response) => {
-                        return response.json()
-                    })
-                    .then((result) => {
-                        if (result.success) {
-                            setLoadDSNC(true)
-                            setShowMess(true)
-                            setTextMess('Xóa ngày công thành công!')
-                            setSeverityMess('success')
-                            return
-                        } else {
-                            setShowMess(true)
-                            setTextMess(result.mess)
-                            setSeverityMess('error')
-                        }
-                    })
-                    .catch((error) => {
-                        console.log('Lỗi', error)
-                    })
-            } else {
-                console.log('fetch not found')
-            }
-        }
-
-        return (
-            <Modal
-                show={modalShowDialogDelNC}
-                onHide={() => setModalShowDialogDelNC(false)}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header>
-                    <h5>Bạn có muốn xóa ngày công này ?</h5>
-                </Modal.Header>
-                <Modal.Body>
-                    <div
-                        style={{
-                            padding: '0 30px',
-                        }}
-                    >
-                        <ItemDialog label="Mã nhân viên: " data={objNC.MaNV} />
-                        <ItemDialog label="Mã ngày công: " data={objNC.MaNC} />
-                        <ItemDialog
-                            label="Số lượng ngày công: "
-                            data={objNC.SLNgayCong}
-                        />
-                    </div>
-                    <hr />
-                    <h5>Nhập tài khoản xác nhận</h5>
-                    <InputText
-                        type="number"
-                        placeholder="Số điện thoại"
-                        setInputContent={setSdt}
-                    />
-                    <InputText
-                        type="password"
-                        placeholder="Mật khẩu"
-                        setInputContent={setPass}
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        variant="secondary"
-                        onClick={() => setModalShowDialogDelNC(false)}
-                    >
-                        Từ Chối
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={() => {
-                            if (
-                                validatedText(sdt, 'số điện thoại') &&
-                                validatedText(pass, 'mật khẩu')
-                            ) {
-                                delNgayCong()
-                                setModalShowDialogDelNC(false)
-                            }
-                        }}
-                    >
-                        Đồng Ý
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
-
     function ModalDialogAddLichLam() {
-        const [maNV, setMaNV] = useState()
-        const [SLNgayCong, setSLNgayCong] = useState()
-        const [dateWorking, setDateWorking] = useState()
-        const [nhanXet, setNhanXet] = useState()
-        const [diemDanh, setDiemDanh] = useState(false)
-
-        const [danhGia, setDanhGia] = useState(1)
-
         const [maCT, setMaCT] = useState()
         const [tenCT, setTenCT] = useState()
         const [diaDiemCT, setDiaDiemCT] = useState()
         const [ngayLam, setNgayLam] = useState()
+        const [ngayKetThuc, setNgayKetThuc] = useState()
 
         const thongTinNhanVien = { ...thongTinNV }
 
@@ -464,13 +253,22 @@ function PhanCongNhanVien(props) {
                 TenCT: tenCT,
                 DiaDiem: diaDiemCT,
                 DateWorking: ngayLam,
+                DateDone: ngayKetThuc,
+                SoNgayCong:
+                    (new Date(ngayKetThuc).getTime() -
+                        new Date(ngayLam).getTime()) /
+                    1000 /
+                    86400,
             }
 
             //kiểm tra ngày làm có lơn hơn ngày hiện tại
-            if (Date.now() > new Date(ngayLam).getTime()) {
+            if (
+                Date.now() > new Date(ngayLam).getTime() &&
+                new Date(ngayKetThuc).getTime() < new Date(ngayLam).getTime()
+            ) {
                 setShowMess(true)
                 setTextMess(
-                    'Thêm lịch làm thất bại, ngày làm phải lớn hơn ngày hiện tại!'
+                    'Ngày làm phải lớn hơn ngày hiện tại và nhỏ hơn ngày kết thúc'
                 )
                 setSeverityMess('error')
                 return
@@ -488,7 +286,6 @@ function PhanCongNhanVien(props) {
                         return response.json()
                     })
                     .then((result) => {
-                        console.log(result)
                         if (result.success) {
                             setLoadDSNC(true)
                             setShowMess(true)
@@ -525,6 +322,7 @@ function PhanCongNhanVien(props) {
                 onHide={() => setModalShowDialogAddNC(false)}
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
+                size="xl"
             >
                 <Modal.Header closeButton>
                     <h4
@@ -536,22 +334,69 @@ function PhanCongNhanVien(props) {
                     </h4>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputText
-                        placeholder="Mã công trình"
-                        setInputContent={setMaCT}
-                    />
-                    <InputText
-                        placeholder="Tên công trình"
-                        setInputContent={setTenCT}
-                    />
-                    <InputText
-                        placeholder="Địa điểm"
-                        setInputContent={setDiaDiemCT}
-                    />
+                    <TableContainer
+                        style={{
+                            maxHeight: '200px',
+                            width: '100%',
+                        }}
+                    >
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>STT</TableCell>
+                                    <TableCell>Tên Công Trình</TableCell>
+                                    <TableCell>Địa Điểm</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {danhSachCT.map((e, index) => {
+                                    return (
+                                        <TableRow
+                                            hover
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => {
+                                                setMaCT(e.MaCT)
+                                                setTenCT(e.TenCT)
+                                                setDiaDiemCT(e.DiaDiem)
+                                            }}
+                                        >
+                                            <TableCell>{index}</TableCell>
+                                            <TableCell>{e.TenCT}</TableCell>
+                                            <TableCell>{e.DiaDiem}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <br />
+                    <div className="input">
+                        <input
+                            placeholder="Tên Công Trình"
+                            className="input-content"
+                            style={{
+                                borderBottom: 'none',
+                            }}
+                            onChange={(e) => {
+                                setTenCT(e.target.value)
+                            }}
+                            value={tenCT}
+                        />
+                    </div>
+                    <div className="input">
+                        <input
+                            placeholder="Địa Điểm "
+                            className="input-content"
+                            onChange={(e) => {
+                                setDiaDiemCT(e.target.value)
+                            }}
+                            value={diaDiemCT}
+                        />
+                    </div>
                     <div className="input">
                         <TextField
                             id="date"
-                            label="Ngày làm việc"
+                            label="Ngày bắt đầu"
                             type="date"
                             className="input-content"
                             InputLabelProps={{
@@ -562,79 +407,20 @@ function PhanCongNhanVien(props) {
                             }}
                         />
                     </div>
-
-                    {/* <h6>Điểm danh</h6>
-                    <div
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'space-around',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <div>
-                            <input
-                                type="radio"
-                                name="diemdanh"
-                                id="co"
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setDiemDanh(true)
-                                        return
-                                    }
-                                }}
-                            />
-                            <label
-                                for="co"
-                                style={{
-                                    marginLeft: '7px',
-                                    fontWeight: '600',
-                                }}
-                            >
-                                Có
-                            </label>
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                name="diemdanh"
-                                id="khong"
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setDiemDanh(false)
-                                        return
-                                    }
-                                }}
-                            />
-                            <label
-                                for="khong"
-                                style={{
-                                    marginLeft: '7px',
-                                    fontWeight: '600',
-                                }}
-                            >
-                                Không
-                            </label>
-                        </div>
-                    </div> */}
-                    {/* <InputText
-                        placeholder="Ngày làm việc"
-                        type="number"
-                        setInputContent={setDateWorking}
-                    />
-
-                    <InputText
-                        placeholder="Nhận xét"
-                        setInputContent={setNhanXet}
-                    />
-                    <h6>Đánh giá</h6>
-                    <Rating
-                        // name="simple-controlled"
-                        value={danhGia}
-                        onChange={(event) => {
-                            setDanhGia(+event.target.value)
-                        }}
-                    /> */}
+                    <div className="input">
+                        <TextField
+                            id="date"
+                            label="Ngày kết thúc"
+                            type="date"
+                            className="input-content"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={(e) => {
+                                setNgayKetThuc(e.target.value)
+                            }}
+                        />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
@@ -662,8 +448,6 @@ function PhanCongNhanVien(props) {
     return (
         <Container fluid>
             <ModalDialogAddLichLam />
-            {/* <ModalDialogDelNgayCong />
-            <ModalDialogUpdateSLNgayCong /> */}
             <Snackbar
                 open={showMess}
                 autoHideDuration={3000}
@@ -752,6 +536,7 @@ function PhanCongNhanVien(props) {
                                         <TableCell>Tên Công Trình</TableCell>
                                         <TableCell>Địa Điểm</TableCell>
                                         <TableCell>Ngày Làm</TableCell>
+                                        <TableCell>Ngày Kết Thúc</TableCell>
                                         <TableCell></TableCell>
                                     </TableRow>
                                 </TableHead>
