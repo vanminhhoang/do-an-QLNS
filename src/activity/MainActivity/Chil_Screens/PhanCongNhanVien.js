@@ -199,8 +199,17 @@ function PhanCongNhanVien(props) {
     var stt = 0
     function ItemNhanVien(props) {
         stt++
+
         return (
-            <TableRow hover>
+            <TableRow
+                hover
+                style={{
+                    backgroundColor:
+                        props.MaNV == object_nhanVien.MaNV
+                            ? 'gainsboro'
+                            : 'white',
+                }}
+            >
                 <TableCell>{stt}</TableCell>
                 <TableCell>{props.HoTen}</TableCell>
                 <TableCell>{props.TenCT}</TableCell>

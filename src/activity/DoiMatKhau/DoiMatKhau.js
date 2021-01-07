@@ -6,8 +6,11 @@ import InputText from '../../component/InputText/InputText'
 import ButtonForm from '../../component/ButtonForm/ButtonForm'
 import TextForm from '../../component/TextForm/TextForm'
 
+import { Link, useHistory } from 'react-router-dom'
+
 //import icon material
 import Spinner from 'react-bootstrap/Spinner'
+import Button from 'react-bootstrap/Button'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
@@ -43,6 +46,7 @@ function ChangePassword() {
     const [textMess, setTextMess] = useState('')
 
     const classes = useStyles()
+    const history = useHistory()
 
     return (
         <div className="container">
@@ -99,6 +103,20 @@ function ChangePassword() {
                         setShowMess={setShowMess}
                         setTextMess={setTextMess}
                     />
+                    <Button
+                        variant="outline-secondary"
+                        style={{
+                            width: '100px',
+                            alignSelf: 'center',
+                            marginTop: '100px',
+                            fontWeight: '600',
+                        }}
+                        onClick={() => {
+                            history.push('/Dashboard')
+                        }}
+                    >
+                        Quay Lại
+                    </Button>
                 </form>
             </div>
         </div>

@@ -84,6 +84,7 @@ function BangLuong(props) {
     function formatNumber(num) {
         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     }
+    const object_nhanVien = JSON.parse(sessionStorage.getItem('info'))
 
     const classes = useStyles()
 
@@ -138,7 +139,15 @@ function BangLuong(props) {
 
     function ItemBangLuong(props, index) {
         return (
-            <TableRow hover>
+            <TableRow
+                hover
+                style={{
+                    backgroundColor:
+                        props.MaNV == object_nhanVien.MaNV
+                            ? 'gainsboro'
+                            : 'white',
+                }}
+            >
                 <TableCell>{index}</TableCell>
                 <TableCell>{props.HoTen}</TableCell>
                 <TableCell>{props.TenCT}</TableCell>

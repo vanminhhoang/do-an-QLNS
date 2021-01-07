@@ -12,6 +12,8 @@ import { lightTheme, darkTheme } from '../../../Theme/theme'
 
 import { UPDATE_NHANVIEN } from '../../../reactRedux/ReduxAc'
 
+import { validatedPhone } from '../../../regex/regexValidated'
+
 //import api
 import { pushNotify } from '../../../api/pushNotify'
 
@@ -610,6 +612,15 @@ function ChiTietNhanVien(props) {
                             setHiddenText('none')
 
                             setShowTextFieldDate(false)
+
+                            //Kiểm tra sđt
+                            if (!validatedPhone(valueInputSDT)) {
+                                setValueInputSDT(data_info_person.SDT)
+                                setShowMess(true)
+                                setTextMess('Cập nhật thất bại!')
+                                setSeverityMess('error')
+                                return
+                            }
 
                             //upload img
                             uploadImg('ABC').then((urlImg) => {
